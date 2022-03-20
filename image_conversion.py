@@ -1,4 +1,5 @@
-from statistics import quantiles
+# 引数でPATHを受け取り画像を白黒変換する
+
 from PIL import Image, ImageFilter
 import sys
 
