@@ -1,28 +1,17 @@
-# 引数でPATHを受け取り画像を色変換したものと並べる
-# 参考：https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#processing-individual-bands
+'''
+引数でPATHを受け取り画像を色変換したものと並べる
+参考：https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#processing-individual-bands
+'''
 
-from PIL import Image
 import sys
+from PIL import Image
+import image_common as ic
+import sys_common as sc
 
-
-def get_concat_v(img1, img2):
-    dst = Image.new('RGB', (img1.width, img1.height + img2.height))
-    dst.paste(img1, (0, 0))
-    dst.paste(img2, (0, img1.height))
-    return dst
-
-
-def resize_to_width(img, width):
-    height = round(width*img.height/img.width)
-    return img.resize((width, height))
-
-
-if len(sys.argv) != 2:
-    print("引数は1つ指定してください")
-    exit()
+sc.check_args(2)
 
 img_path = sys.argv[1]
-org_img = resize_to_width(Image.open(img_path), 128)
+org_img = ic.resize_to_width(Image.open(img_path), 128)
 new_img = org_img.copy()
 
 for i in range(3):
@@ -41,7 +30,7 @@ for i in range(3):
     # build a new multiband image
     converted_img = Image.merge(org_img.mode, source)
 
-    new_img = get_concat_v(new_img, converted_img)
+    new_img = ic.get_concat_v(new_img, converted_img)
 
-new_img_path = '.'.join(img_path.split(".")[0:-1]) + "_change_color.jpg"
-new_img.save(new_img_path, quantiles=95)
+NEW_IMG_PATH = '.'.join(img_path.split(".")[0:-1]) + "_change_color.jpg"
+new_img.save(NEW_IMG_PATH, quantiles=95)
